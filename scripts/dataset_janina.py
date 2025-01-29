@@ -30,7 +30,7 @@ class BleedDataset(Dataset):
             A.RandomScale(scale_limit=0.2, p=0.5),  # Zoom in and out
             A.Rotate(limit=40, p=0.7),  # Rotation
             A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1, p=0.5),  # Color and intensity change
-            A.GaussianNoise(var_limit=(10.0, 50.0), p=0.5)  # Additive noise
+            # A.GaussianNoise(var_limit=(10.0, 50.0), p=0.5)  # Additive noise
         ])
 
     def __len__(self):
