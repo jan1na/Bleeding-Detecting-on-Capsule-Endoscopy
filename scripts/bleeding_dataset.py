@@ -60,6 +60,12 @@ class BleedDataset(Dataset):
         self.apply_augmentation = True
         self.data = self.bleeding_data * self.augment_times + self.healthy_data
 
+    def get_labels(self):
+        if self.apply_augmentation:
+            return [1] * len(self.bleeding_data) * self.augment_times + [0] * len(self.healthy_data)
+        else:
+            return [1] * len(self.bleeding_data) + [0] * len(self.healthy_data)
+
     def __getitem__(self, idx):
         image_path, label = self.data[idx]
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE if self.mode == "gray" else cv2.IMREAD_COLOR)
