@@ -53,7 +53,9 @@ class BleedDataset(Dataset):
 
     def disable_augmentation(self):
         self.apply_augmentation = False
+        print(len(self.data))
         self.data = self.bleeding_data + self.healthy_data
+        print(len(self.data))
 
     def __getitem__(self, idx):
         image_path, label = self.data[idx]
