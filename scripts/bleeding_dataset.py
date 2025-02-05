@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 import os
 
 class BleedDataset(Dataset):
-    def __init__(self, root_dir, mode="RGB", augment_times=10, apply_augmentation=False):
+    def __init__(self, root_dir, mode="RGB", augment_times=10, apply_augmentation=True):
         self.root_dir = root_dir
         self.bleeding_dir = os.path.join(root_dir, "bleeding")
         self.healthy_dir = os.path.join(root_dir, "healthy")
@@ -51,9 +51,9 @@ class BleedDataset(Dataset):
         image[:31, 452:] = 0
         return image
 
-    def enable_augmentation(self, augment_times=1):
-        self.apply_augmentation = True
-        self.data = self.bleeding_data * augment_times + self.healthy_data
+    def disable_augmentation(self):
+        self.apply_augmentation = False
+        self.data = self.bleeding_data + self.healthy_data
 
     def __getitem__(self, idx):
         image_path, label = self.data[idx]
