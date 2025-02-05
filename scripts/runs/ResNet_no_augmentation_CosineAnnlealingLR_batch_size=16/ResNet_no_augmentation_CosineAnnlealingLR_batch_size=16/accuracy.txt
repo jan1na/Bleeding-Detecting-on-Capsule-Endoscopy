@@ -1,0 +1,3 @@
+Total accuracy: 0.10334788937409024 on threshold: 0.5
+Healthy detection: 0/616 | accuracy: 0.0
+Bleeding detection: 71/71 | accuracy: 1.0
