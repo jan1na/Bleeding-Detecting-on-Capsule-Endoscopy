@@ -24,10 +24,12 @@ class GoogleNet(nn.Module):
         self.aux_logits = aux_logits
 
     def forward(self, x):
-        x = self.model(x)
-        if self.aux_logits:  # Handle auxiliary outputs if enabled
-            x = x[0]  # Use main classifier output
-        return self.sigmoid(x)
+        if self.aux_logits:
+            x, aux_out = self.model(x)
+            return self.sigmoid(x)
+        else:
+            x = self.model(x)
+            return self.sigmoid(x)
 
 
 class ResNet(nn.Module):
