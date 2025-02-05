@@ -11,6 +11,7 @@ class BleedDataset(Dataset):
         self.bleeding_dir = os.path.join(root_dir, "bleeding")
         self.healthy_dir = os.path.join(root_dir, "healthy")
         self.apply_augmentation = apply_augmentation
+        self.augment_times = augment_times
 
         # Separate data lists for controlled augmentation
         self.bleeding_data = [
@@ -53,9 +54,11 @@ class BleedDataset(Dataset):
 
     def disable_augmentation(self):
         self.apply_augmentation = False
-        print(len(self.data))
         self.data = self.bleeding_data + self.healthy_data
-        print(len(self.data))
+
+    def enable_augmentation(self):
+        self.apply_augmentation = True
+        self.data = self.bleeding_data * self.augment_times + self.healthy_data
 
     def __getitem__(self, idx):
         image_path, label = self.data[idx]
