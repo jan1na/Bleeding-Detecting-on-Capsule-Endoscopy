@@ -24,10 +24,8 @@ class BleedDataset(Dataset):
         ]
 
         # Combine both, but only duplicate bleeding images for augmentation
-        if apply_augmentation:
-            self.data = self.bleeding_data * augment_times + self.healthy_data
-        else:
-            self.data = self.bleeding_data + self.healthy_data
+
+        self.data = self.bleeding_data * augment_times + self.healthy_data
 
         self.mode = mode.lower()
         if self.mode not in {"rgb", "gray"}:
@@ -54,17 +52,12 @@ class BleedDataset(Dataset):
 
     def disable_augmentation(self):
         self.apply_augmentation = False
-        self.data = self.bleeding_data + self.healthy_data
 
     def enable_augmentation(self):
         self.apply_augmentation = True
-        self.data = self.bleeding_data * self.augment_times + self.healthy_data
 
     def get_labels(self):
-        if self.apply_augmentation:
-            return [1] * len(self.bleeding_data) * self.augment_times + [0] * len(self.healthy_data)
-        else:
-            return [1] * len(self.bleeding_data) + [0] * len(self.healthy_data)
+        return [1] * len(self.bleeding_data) * self.augment_times + [0] * len(self.healthy_data)
 
     def __getitem__(self, idx):
         image_path, label = self.data[idx]
