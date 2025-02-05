@@ -6,36 +6,43 @@ from torch.utils.data import Dataset
 import os
 
 class BleedDataset(Dataset):
-    def __init__(self, root_dir, mode="RGB", augment_times=10):
+    def __init__(self, root_dir, mode="RGB", augment_times=10, apply_augmentation=True):
         self.root_dir = root_dir
         self.bleeding_dir = os.path.join(root_dir, "bleeding")
         self.healthy_dir = os.path.join(root_dir, "healthy")
+        self.apply_augmentation = apply_augmentation
 
-        # Combine images and labels into tuples
-        self.data = [
+        # Separate data lists for controlled augmentation
+        self.bleeding_data = [
             (os.path.join(self.bleeding_dir, p), 1)
             for p in os.listdir(self.bleeding_dir)
-        ] + [
+        ]
+        self.healthy_data = [
             (os.path.join(self.healthy_dir, p), 0)
             for p in os.listdir(self.healthy_dir)
         ]
+
+        # Combine both, but only duplicate bleeding images for augmentation
+        if apply_augmentation:
+            self.data = self.bleeding_data * augment_times + self.healthy_data
+        else:
+            self.data = self.bleeding_data + self.healthy_data
 
         self.mode = mode.lower()
         if self.mode not in {"rgb", "gray"}:
             raise ValueError("Invalid mode. Use 'RGB' or 'gray'.")
 
         # Augmentation settings
-        self.augment_times = augment_times
         self.augmentation = A.Compose([
-            A.RandomScale(scale_limit=0.2, p=0.5),  # Zoom in and out
+            A.RandomScale(scale_limit=0.3, p=0.5),  # Zoom in and out
             A.Rotate(limit=40, p=0.7),  # Rotation
-            A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1, p=0.5),  # Color and intensity change
-            # A.GaussianNoise(var_limit=(10.0, 50.0), p=0.5)  # Additive noise
-            A.Resize(height=512, width=512)  # Resize to a fixed size if needed
+            A.GaussianBlur(blur_limit=(3, 7), p=0.3),  # Blur
+            A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.3),  # Distortion
+            A.Resize(height=224, width=224)  # Resize to a fixed size if needed
         ])
 
     def __len__(self):
-        return len(self.data) * self.augment_times  # Increased size for augmented data
+        return len(self.data)
 
     @staticmethod
     def _preprocess_image(image):
@@ -45,18 +52,21 @@ class BleedDataset(Dataset):
         return image
 
     def __getitem__(self, idx):
-        image_path, label = self.data[idx % len(self.data)]  # To ensure repeating original data
+        image_path, label = self.data[idx]
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE if self.mode == "gray" else cv2.IMREAD_COLOR)
         image = self._preprocess_image(image)
 
-        # Apply augmentation
-        augmented_image = self.augmentation(image=image)["image"]
+        # Apply augmentation **only for bleeding images**
+        if self.apply_augmentation and label == 1:
+            image = self.augmentation(image=image)["image"]
+        else:
+            image = cv2.resize(image, (224, 224))  # Resize healthy images without augmentation
 
         # Convert to tensor-friendly format
-        if augmented_image.ndim == 3:
-            augmented_image = np.transpose(augmented_image, (2, 0, 1))  # Convert to CxHxW
+        if image.ndim == 3:
+            image = np.transpose(image, (2, 0, 1))  # Convert to CxHxW
         else:
-            augmented_image = augmented_image[np.newaxis, ...]
-        augmented_image = torch.from_numpy(augmented_image).float()
+            image = image[np.newaxis, ...]
+        image = torch.from_numpy(image).float()
 
-        return augmented_image, label
+        return image, label
