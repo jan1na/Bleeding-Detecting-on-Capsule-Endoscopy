@@ -51,8 +51,7 @@ class BleedDataset(Dataset):
         image[:31, 452:] = 0
         return image
 
-    def enable_augmentation(self, augment_times):
-        self.augmentation = augment_times
+    def enable_augmentation(self, augment_times=1):
         self.apply_augmentation = True
         self.data = self.bleeding_data * augment_times + self.healthy_data
 
