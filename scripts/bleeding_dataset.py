@@ -8,12 +8,13 @@ from torch.utils.data import Dataset
 
 
 class BleedDataset(Dataset):
-    def __init__(self, root_dir, mode="RGB", augment_times=8, apply_augmentation=True):
+    def __init__(self, root_dir, mode="RGB", augment_times=8, apply_augmentation=False):
         self.root_dir = root_dir
         self.bleeding_dir = os.path.join(root_dir, "bleeding")
         self.healthy_dir = os.path.join(root_dir, "healthy")
         self.apply_augmentation = apply_augmentation
         self.augment_times = augment_times if apply_augmentation else 1
+        print(self.augment_times)
 
         # Separate data lists for controlled augmentation
         self.bleeding_data = [(os.path.join(self.bleeding_dir, p), 1) for p in os.listdir(self.bleeding_dir)]
