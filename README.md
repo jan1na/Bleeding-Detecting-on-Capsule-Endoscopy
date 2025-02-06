@@ -94,6 +94,7 @@ The deep learning models were trained using **Google Colab** with the script `mo
 - **Enhancement of Classical Methods:** Aim to improve robustness and accuracy.
 - **GUI Integration:** Incorporate classical detection methods into the graphical interface.
 - **Architectural Exploration:** Experiment with alternative deep learning architectures to further boost performance.
+- **Saving hyperparemters:** Save a file with all hyperpareters, together with the trained model. Currently only the model.pth, its accurcy and a plot of the train and validation loss is saved.
 
 ## Contributors
 - Meriç Demirörs
