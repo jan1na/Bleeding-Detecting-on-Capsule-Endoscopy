@@ -33,11 +33,7 @@ was MobileNetV2 with an accuracy of 0.96.
 - 16
 ### Augmentation
 Tried to overcome the class imbalance by augmenting the bleeding class. However, the performance was not improved.
-But if you want to try, you can enable it in using the BleedingDataset with the parameter `apply_augmentation=True`.
-That is not all. To use it in the training script model_finetuning.py, you need to uncomment the lines marked with 
-`if augmentation used`. First is at the bleeding_weight definition. After that 
-you need to uncomment `full_dataset.enable_augmentation()` and `full_dataset.disable_augmentation()` in the training loop
-in front of the training and  validation phase. And finally in front of the test phase in the testing space.
+But if you want to try, you can enable it by setting the hyperparameter APPLY_AUGMENTATION to True.
 
 #### Unresolvable Issue
 The validation and test set also has `AUGMENT_TIMES` times images, but the augmentation is disabled for those images.
