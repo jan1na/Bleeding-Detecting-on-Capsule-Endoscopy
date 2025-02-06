@@ -14,7 +14,6 @@ class BleedDataset(Dataset):
         self.healthy_dir = os.path.join(root_dir, "healthy")
         self.apply_augmentation = apply_augmentation
         self.augment_times = augment_times if apply_augmentation else 1
-        print(self.augment_times)
 
         # Separate data lists for controlled augmentation
         self.bleeding_data = [(os.path.join(self.bleeding_dir, p), 1) for p in os.listdir(self.bleeding_dir)]
@@ -22,7 +21,7 @@ class BleedDataset(Dataset):
 
         # Combine both, but only duplicate bleeding images for augmentation
 
-        self.data = self.bleeding_data * augment_times + self.healthy_data
+        self.data = self.bleeding_data * self.augment_times + self.healthy_data
 
         self.mode = mode.lower()
         if self.mode not in {"rgb", "gray"}:
