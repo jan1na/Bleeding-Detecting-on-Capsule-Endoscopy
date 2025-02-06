@@ -8,6 +8,9 @@ from torch.utils.data import Dataset
 
 
 class BleedDataset(Dataset):
+    """
+    Custom PyTorch dataset for loading and preprocessing the bleeding dataset.
+    """
     def __init__(self, root_dir: str, mode: str = "RGB", augment_times: int = 8,
                  apply_augmentation: bool = False) -> None:
         """
