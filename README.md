@@ -73,11 +73,7 @@ Different approaches were explored to improve performance:
 - **Augmentation:** Applied to bleeding class, but did not improve performance. 
 
 ### Augmentation Usage
-To try augmentation, enable it in `BleedingDataset` with the parameter `apply_augmentation=True`. However, this alone is not sufficient. Additional steps are required:
-1. Uncomment the lines marked with `if augmentation used` in `model_finetuning.py`.
-2. Specifically, uncomment the `bleeding_weight` definition.
-3. Uncomment `full_dataset.enable_augmentation()` and `full_dataset.disable_augmentation()` in the training loop before the training and validation phases.
-4. Uncomment the same in the test phase in the testing section.
+Augmentation did not improve the results, but if you want to try it, just set *APPLY_AUGMENTATION* in the `model_finetuning.ipynb` to True.
 
 ### Unresolvable Issue
 The validation and test sets contain multiple copies of images due to class augmentation, leading to repeated image evaluations. The validation and test sets still contain `AUGMENT_TIMES` times more images, even though augmentation is disabled for them. This issue remains unresolved.
