@@ -37,7 +37,7 @@ python gui.py
 Upload an image, select a model, and get the prediction.
 
 ### Running Deep Learning Models
-Run the training script in Google Colab using `model_finetuning.ipynb`. Open the notebook, configure the desired model parameters, and execute the cells step by step.
+Run the training script in Google Colab using `model_finetuning.ipynb`. Open the notebook, configure the desired model parameters, and execute all cells.
 
 ## Models
 Several pretrained models were fine-tuned, including:
