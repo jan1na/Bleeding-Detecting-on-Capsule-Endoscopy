@@ -37,7 +37,7 @@ python gui.py
 Upload an image, select a model, and get the prediction.
 
 ### Running Deep Learning Models
-Run the training script in Google Colab using `model_finetuning.ipynb`. Open the notebook, configure the desired model parameters, and execute the cells step by step.
+Run the training script in Google Colab using `model_finetuning.ipynb`. Open the notebook, configure the desired model parameters, and execute the cells step by step. Of course you can also adjust the *AUGMENT_TIMES* parameter, that decides how many times the bleeding images are augmented, but by leaving it on 8, you balance out the bleeding and healthy images almost perfectly: `713 * 8 = 5.704 ~ 6161`. If you want to oversample the bleeding images you can instead choose 9 augmentations.
 
 ## Models
 Several pretrained models were fine-tuned, including:
