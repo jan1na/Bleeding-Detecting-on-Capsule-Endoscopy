@@ -73,7 +73,7 @@ Different approaches were explored to improve performance:
 - **Augmentation:** Applied to bleeding class, but did not improve performance. 
 
 ### Augmentation Usage
-Augmentation did not improve the results, but if you want to try it, just set *APPLY_AUGMENTATION* in the `model_finetuning.ipynb` to True. Of course you can also adjust the *AUGMENT_TIMES* parameter, that decides how many times the bleeding images are augmented, but by leaving it on 8, you balance out the bleeding and healthy images almost perfectly: `713 * 8 = 5.704 ~ 6161`. If you want to oversample the bleeding images you can instead choose 9 augmentations.
+Augmentation did not improve the results, but if you want to try it, just set *APPLY_AUGMENTATION* in the `model_finetuning.ipynb` to True. Of course you can also adjust the *AUGMENT_TIMES* parameter, that decides how many times the bleeding images are augmented. But by leaving it on 8, you balance out the bleeding and healthy images almost perfectly: `713 * 8 = 5.704 ~ 6161`. If you want to oversample the bleeding images you can instead choose 9 augmentations.
 
 ### Unresolvable Issue
 The validation and test sets contain multiple copies of images due to class augmentation, leading to repeated image evaluations. The validation and test sets still contain `AUGMENT_TIMES` times more images, even though augmentation is disabled for them. This issue remains unresolved.
