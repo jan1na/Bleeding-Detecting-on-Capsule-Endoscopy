@@ -2,72 +2,99 @@
 
 ![Sample Image](path/to/your/image1.png)
 
-## Overview
-
-This repository presents a comprehensive approach to detecting bleeding in capsule endoscopy images, combining deep learning models with classical image processing techniques. The project aims to enhance diagnostic accuracy and provide a user-friendly interface for medical practitioners.
+## Introduction
+This project aims to classify capsule endoscopy images into bleeding and healthy categories. The dataset consists of:
+- **713 bleeding images**
+- **6161 non-bleeding images**
 
 ## Features
-
-- **Deep Learning Models:** Implementation of fine-tuned MobileNetV2 and ResNet50 architectures for image classification tasks.
-- **Classical Image Processing:** Utilization of redness-based analysis to identify potential bleeding regions.
-- **Graphical User Interface (GUI):** An intuitive interface allowing users to upload images, select the desired detection model, and view results seamlessly.
-- **Data Augmentation:** Application of various augmentation techniques to address class imbalance and improve model robustness.
-- **Comprehensive Evaluation:** Assessment using metrics such as precision, recall, F1-score, and area under the precision-recall curve.
+- **Deep Learning Models:** Fine-tuned ResNet50, MobileNetV2, AlexNet, and VGG19 for image classification.
+- **Classical Image Processing:** Redness-based analysis to detect bleeding.
+- **Graphical User Interface (GUI):** A user-friendly interface for easy interaction.
+- **Data Augmentation:** Attempts to address class imbalance.
+- **Comprehensive Evaluation:** Using precision, recall, F1-score, and area under the precision-recall curve.
 
 ## Dataset
+The dataset is divided into two categories:
+- **Bleeding Images**
+- **Healthy Images**
 
-The dataset comprises two primary categories:
-
-- **Bleeding Images:** Frames exhibiting signs of bleeding.
-- **Healthy Images:** Frames without any bleeding indications.
-
-To mitigate class imbalance, strategies like oversampling and the implementation of weighted loss functions were employed.
+To handle class imbalance, oversampling techniques and weighted loss functions were applied.
 
 ![Data Distribution](path/to/your/image2.png)
 
 ## Installation
-
 Ensure you have Python installed. Then, install the required dependencies:
-
 ```bash
 pip install -r requirements.txt
 ```
-## Usage
-Running the GUI
-Launch the graphical interface with the following command:
 
+## Usage
+### Running the GUI
 ```bash
 python gui.py
 ```
-Within the GUI, you can upload an image, choose between the deep learning or classical detection methods, and receive immediate predictions.
+Upload an image, select a model, and get the prediction.
 
-## Training Deep Learning Models
-To train the models, execute:
-
+### Running Deep Learning Models
 ```bash
 python train.py --model mobilenetv2  # For MobileNetV2
 python train.py --model resnet50     # For ResNet50
 ```
-Model Performance
-MobileNetV2
-Scheduler: Utilized CosineAnnealingLR.
-Batch Size: 32.
-Accuracy: Achieved an accuracy of 96.07%.
-ResNet50
-Performance: Demonstrated variability in accuracy based on augmentation techniques and scheduler configurations.
+
+## Models
+Several pretrained models were fine-tuned, including:
+- ResNet50
+- MobileNetV2
+- AlexNet
+- VGG19
+
+The best-performing model was **MobileNetV2**, achieving an accuracy of **96.07%**.
+
+### Best Model: MobileNetV2
+**Configuration:**
+- **No augmentation**
+- **Scheduler:** CosineAnnealingLR
+- **Optimizer:** Adam
+- **Criterion:** BCEWithLogitsLoss with penalty for class imbalance
+- **Batch Size:** 32
+- **Learning Rate:** 0.001
+- **Epochs:** 20
+- **Early Stopping:** 3
+- **Threshold:** 0.5
+
+#### Accuracy
+- **Total accuracy:** 0.9607
+- **Healthy detection:** 591/616 (**95.94%**)
+- **Bleeding detection:** 69/71 (**97.18%**)
+
+## Model Performance
+### Hyperparameter Tuning
+Different approaches were explored to improve performance:
+- **Schedulers:** StepLR, CosineAnnealingLR
+- **Batch Sizes:** 16, 32
+- **Augmentation:** Applied to bleeding class, but did not improve performance. It can be enabled via the `BleedingDataset` parameter `apply_augmentation=True`.
+
+### Unresolvable Issue
+The validation and test sets contain multiple copies of images due to class augmentation, leading to repeated image evaluations. This issue remains unresolved.
+
+![Model Performance Comparison](path/to/your/image3.png)
 
 ## Classical Method
-The classical approach calculates a "redness score" by analyzing weighted RGB channel values.
+This method calculates a "redness score" by analyzing weighted RGB channel values.
+- **Optimal Threshold:** 62,859
+- **Evaluation Metrics:** Precision, recall, F1-score, and precision-recall curves.
 
-Optimal Threshold: 62,859.
-Evaluation Metrics: Precision, recall, F1-score, and precision-recall curves were used for assessment.
+![Redness Score Distribution](path/to/your/image4.png)
 
 ## Future Work
-Enhancement of Classical Methods: Aim to improve robustness and accuracy.
-GUI Integration: Incorporate classical detection methods into the graphical interface.
-Architectural Exploration: Experiment with alternative deep learning architectures to further boost performance.
+- **Enhancement of Classical Methods:** Aim to improve robustness and accuracy.
+- **GUI Integration:** Incorporate classical detection methods into the graphical interface.
+- **Architectural Exploration:** Experiment with alternative deep learning architectures to further boost performance.
+
 ## Contributors
-Meriç Demirörs
-Yusuf Bera Demirhan
-Janina Fritzke
-Waleed Ahmed Shahid
+- Meriç Demirörs
+- Yusuf Bera Demirhan
+- Janina Fritzke
+- Waleed Ahmed Shahid
+
