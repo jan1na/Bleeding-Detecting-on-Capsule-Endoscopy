@@ -2,6 +2,12 @@
 
 ![Sample Image](path/to/your/image1.png)
 
+## Installation
+Ensure you have Python installed. Then, install the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+
 ## Introduction
 This project aims to classify capsule endoscopy images into bleeding and healthy categories. The dataset consists of:
 - **713 bleeding images**
@@ -23,12 +29,6 @@ To handle class imbalance, oversampling techniques and weighted loss functions w
 
 ![Data Distribution](path/to/your/image2.png)
 
-## Installation
-Ensure you have Python installed. Then, install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
-
 ## Usage
 ### Running the GUI
 ```bash
@@ -37,10 +37,7 @@ python gui.py
 Upload an image, select a model, and get the prediction.
 
 ### Running Deep Learning Models
-```bash
-python train.py --model mobilenetv2  # For MobileNetV2
-python train.py --model resnet50     # For ResNet50
-```
+Run the training script in Google Colab using `model_finetuning.ipynb`. Open the notebook, configure the desired model parameters, and execute the cells step by step.
 
 ## Models
 Several pretrained models were fine-tuned, including:
@@ -73,10 +70,17 @@ The best-performing model was **MobileNetV2**, achieving an accuracy of **96.07%
 Different approaches were explored to improve performance:
 - **Schedulers:** StepLR, CosineAnnealingLR
 - **Batch Sizes:** 16, 32
-- **Augmentation:** Applied to bleeding class, but did not improve performance. It can be enabled via the `BleedingDataset` parameter `apply_augmentation=True`.
+- **Augmentation:** Applied to bleeding class, but did not improve performance. 
+
+### Augmentation Usage
+To try augmentation, enable it in `BleedingDataset` with the parameter `apply_augmentation=True`. However, this alone is not sufficient. Additional steps are required:
+1. Uncomment the lines marked with `if augmentation used` in `model_finetuning.py`.
+2. Specifically, uncomment the `bleeding_weight` definition.
+3. Uncomment `full_dataset.enable_augmentation()` and `full_dataset.disable_augmentation()` in the training loop before the training and validation phases.
+4. Uncomment the same in the test phase in the testing section.
 
 ### Unresolvable Issue
-The validation and test sets contain multiple copies of images due to class augmentation, leading to repeated image evaluations. This issue remains unresolved.
+The validation and test sets contain multiple copies of images due to class augmentation, leading to repeated image evaluations. The validation and test sets still contain `AUGMENT_TIMES` times more images, even though augmentation is disabled for them. This issue remains unresolved.
 
 ![Model Performance Comparison](path/to/your/image3.png)
 
@@ -86,6 +90,9 @@ This method calculates a "redness score" by analyzing weighted RGB channel value
 - **Evaluation Metrics:** Precision, recall, F1-score, and precision-recall curves.
 
 ![Redness Score Distribution](path/to/your/image4.png)
+
+## Training Environment
+The deep learning models were trained using **Google Colab** with the script `model_finetuning.ipynb`.
 
 ## Future Work
 - **Enhancement of Classical Methods:** Aim to improve robustness and accuracy.
@@ -97,4 +104,7 @@ This method calculates a "redness score" by analyzing weighted RGB channel value
 - Yusuf Bera Demirhan
 - Janina Fritzke
 - Waleed Ahmed Shahid
+
+## License
+This project is licensed under the MIT License.
 
