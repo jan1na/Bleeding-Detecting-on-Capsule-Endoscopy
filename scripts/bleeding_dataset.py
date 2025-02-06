@@ -1,27 +1,23 @@
+import os
+
 import albumentations as A
 import cv2
 import numpy as np
 import torch
 from torch.utils.data import Dataset
-import os
+
 
 class BleedDataset(Dataset):
-    def __init__(self, root_dir, mode="RGB", augment_times=10, apply_augmentation=True):
+    def __init__(self, root_dir, mode="RGB", augment_times=8, apply_augmentation=True):
         self.root_dir = root_dir
         self.bleeding_dir = os.path.join(root_dir, "bleeding")
         self.healthy_dir = os.path.join(root_dir, "healthy")
         self.apply_augmentation = apply_augmentation
-        self.augment_times = augment_times
+        self.augment_times = augment_times if apply_augmentation else 1
 
         # Separate data lists for controlled augmentation
-        self.bleeding_data = [
-            (os.path.join(self.bleeding_dir, p), 1)
-            for p in os.listdir(self.bleeding_dir)
-        ]
-        self.healthy_data = [
-            (os.path.join(self.healthy_dir, p), 0)
-            for p in os.listdir(self.healthy_dir)
-        ]
+        self.bleeding_data = [(os.path.join(self.bleeding_dir, p), 1) for p in os.listdir(self.bleeding_dir)]
+        self.healthy_data = [(os.path.join(self.healthy_dir, p), 0) for p in os.listdir(self.healthy_dir)]
 
         # Combine both, but only duplicate bleeding images for augmentation
 
@@ -32,13 +28,13 @@ class BleedDataset(Dataset):
             raise ValueError("Invalid mode. Use 'RGB' or 'gray'.")
 
         # Augmentation settings
-        self.augmentation = A.Compose([
-            A.RandomScale(scale_limit=0.3, p=0.5),  # Zoom in and out
-            A.Rotate(limit=40, p=0.7),  # Rotation
-            A.GaussianBlur(blur_limit=(3, 7), p=0.3),  # Blur
-            A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.3),  # Distortion
-            A.Resize(height=224, width=224)  # Resize to a fixed size if needed
-        ])
+        self.augmentation = A.Compose(
+            [A.RandomScale(scale_limit=0.3, p=0.5),  # Zoom in and out
+             A.Rotate(limit=40, p=0.7),  # Rotation
+             A.GaussianBlur(blur_limit=(3, 7), p=0.3),  # Blur
+             A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.3),  # Distortion
+             A.Resize(height=224, width=224)  # Resize to a fixed size if needed
+             ])
 
     def __len__(self):
         return len(self.data)

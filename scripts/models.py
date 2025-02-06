@@ -15,23 +15,6 @@ class MobileNetV2(nn.Module):
         return self.sigmoid(self.model(x))
 
 
-class GoogleNet(nn.Module):
-    def __init__(self, aux_logits=False):
-        super(GoogleNet, self).__init__()
-        self.model = models.googlenet(pretrained=USE_PRETRAINED, aux_logits=aux_logits)
-        self.model.fc = nn.Linear(self.model.fc.in_features, 1)
-        self.sigmoid = nn.Sigmoid()
-        self.aux_logits = aux_logits
-
-    def forward(self, x):
-        if self.aux_logits:
-            x, aux_out = self.model(x)
-            return self.sigmoid(x)
-        else:
-            x = self.model(x)
-            return self.sigmoid(x)
-
-
 class ResNet(nn.Module):
     def __init__(self):
         super(ResNet, self).__init__()
