@@ -8,6 +8,9 @@ Ensure you have Python installed. Then, install the required dependencies:
 pip install -r requirements.txt
 ```
 
+## Warning
+Results are not meaningful, because the patients in the train and test data did not get separeted which could result in data leakage.
+
 ## Introduction
 This project aims to classify capsule endoscopy images into bleeding and healthy categories. The dataset consists of:
 - **713 bleeding images**
